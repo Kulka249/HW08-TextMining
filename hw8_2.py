@@ -65,14 +65,16 @@ def build_tf_matrix(docword):
 
 
 # Builds an inverse document frequency matrix
+
 def build_idf_matrix(docword):
     num_docs = docword.shape[0]
     doc_freq = np.count_nonzero(docword, axis=0)
 
-    idf = np.zeros(docword.shape[1])
-    np.divide(num_docs, doc_freq, out=idf, where=doc_freq != 0)
+    idf = np.zeros((1, docword.shape[1]))
+    np.divide(num_docs, doc_freq, out=idf[0], where=doc_freq != 0)
 
     return np.log10(idf, out=np.zeros_like(idf), where=idf > 0)
+
 
 
 #   Builds a tf-idf matrix given a doc word matrix
@@ -81,14 +83,16 @@ def build_tfidf_matrix(docword):
 
 
 #   Find the three most distinctive ngrams, according to TFIDF, in each document
+
 def find_distinctive_ngrams(docword, ngramlist, doclist):
     distinctive_words = {}
-    tfidf = build_tfidf_matrix(docword)
 
     for i, doc in enumerate(doclist):
-        indices = np.argsort(-tfidf[i], kind="stable")[:3]
+        indices = np.argsort(-docword[i])[:3]
         distinctive_words[doc] = [ngramlist[j] for j in indices]
+
     return distinctive_words
+
 
 
 if __name__ == "__main__":
@@ -116,7 +120,7 @@ if __name__ == "__main__":
     print(docword[0][0:10])
     print(wordlist[0:10])
     print(docword[1][0:10])
-    
+
     print("\n*** Testing build_tf_matrix ***")
     tf = build_tf_matrix(docword)
     print(tf[0][0:10])
