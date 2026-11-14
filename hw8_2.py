@@ -84,11 +84,12 @@ def build_tfidf_matrix(docword):
 
 #   Find the three most distinctive ngrams, according to TFIDF, in each document
 
+
 def find_distinctive_ngrams(docword, ngramlist, doclist):
     distinctive_words = {}
-
+    
     for i, doc in enumerate(doclist):
-        indices = np.argsort(-docword[i])[:3]
+        indices = np.argsort(-build_tfidf_matrix(docword)[i])[:3]
         distinctive_words[doc] = [ngramlist[j] for j in indices]
 
     return distinctive_words
